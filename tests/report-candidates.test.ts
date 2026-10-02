@@ -2,6 +2,7 @@ import { gate, stub, tag } from "./setup.ts";
 // A selected item released across the 08:00 boundary must appear in the next issue exactly once.
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
+import { config } from "@aihot/backend/config";
 import { setTimeout as delay } from "node:timers/promises";
 import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
@@ -19,11 +20,15 @@ const provider = await stub((hit) => ({
 process.env.DEEPSEEK_BASE_URL = `${provider.url}/v1`;
 process.env.DEEPSEEK_API_KEY = "test-key";
 
+// Only the localhost model fixture may make calls; restore the test safety valve afterwards.
+const originalModelCallsEnabled = config.modelCallsEnabled;
 before(async () => {
+  config.modelCallsEnabled = true;
   await sql`INSERT INTO sources (id, name, kind, tier, participation_mode, next_fetch_at)
             VALUES (${SOURCE}, 'Report boundary test', 'rss', 'T1', 'editorial', '2100-01-01')`;
 });
 after(async () => {
+  config.modelCallsEnabled = originalModelCallsEnabled;
   await sql`DELETE FROM reports WHERE kind = 'daily' AND key IN ('2020-01-02', '2020-01-03', '2020-01-04', '2020-01-05')`;
   await provider.close();
   await stopBoss();
@@ -43,7 +48,7 @@ async function analyzed(label: string, timelineAt: string): Promise<string> {
   });
   assert.equal(backfill, false);
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, score, selected)
-            VALUES (${articleId}, 1, 'rule', 'pass', 'ai-models', ${`标题 ${label}`}, ${`摘要 ${label}`}, 90, true)`;
+            VALUES (${articleId}, 1, 'rule', 'pass', 'ai-compute', ${`标题 ${label}`}, ${`摘要 ${label}`}, 90, true)`;
   return articleId;
 }
 

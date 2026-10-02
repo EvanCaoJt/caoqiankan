@@ -2,6 +2,7 @@
 import { gate, stub } from "./setup.ts";
 import { pair, story, source, article, sourceVersion, cleanup, fixtureTag, trackStory } from "./events-oss-withdrawal-fixture.ts";
 import assert from "node:assert/strict";
+import { config } from "@aihot/backend/config";
 import { after, before, test } from "node:test";
 import { sql, closeDb } from "@aihot/backend/db";
 import { stopBoss } from "@aihot/backend/jobs/queue";
@@ -26,11 +27,15 @@ process.env.DEEPSEEK_BASE_URL = `${provider.url}/v1`;
 process.env.DEEPSEEK_API_KEY = "test-key";
 process.env.GROUP_REVIEW_MODEL = "deepseek-flash";
 let budgets: Array<{ service: string; per_minute: number; per_hour: number; per_day: number }> = [];
+// Only the localhost model fixture may make calls; restore the test safety valve afterwards.
+const originalModelCallsEnabled = config.modelCallsEnabled;
 before(async () => {
+  config.modelCallsEnabled = true;
   budgets = await sql`SELECT service,per_minute,per_hour,per_day FROM budgets WHERE service='deepseek'`;
   await sql`UPDATE budgets SET per_minute=1000,per_hour=10000,per_day=100000 WHERE service='deepseek'`;
 });
 after(async () => {
+  config.modelCallsEnabled = originalModelCallsEnabled;
   await provider.close();
   try {
     await cleanup();
@@ -152,7 +157,7 @@ test("撤回发生在首次归组回答之前，晚到结果不能新建可复�
   const asked = gate(); const hold = gate();
   answer = async (user) => {
     asked.open(); await hold.promise;
-    return { query: "模型发布", decisions: [...user.matchAll(/【候选 (C\d+)】/g)].map(m => ({ id: m[1], relation: "UNRELATED", confidence: 0.99, note: "不同事件" })) };
+    return { query: "技术/产品", decisions: [...user.matchAll(/【候选 (C\d+)】/g)].map(m => ({ id: m[1], relation: "UNRELATED", confidence: 0.99, note: "不同事件" })) };
   };
   const run = groupArticle(a);
   await waitForCall(asked, run);

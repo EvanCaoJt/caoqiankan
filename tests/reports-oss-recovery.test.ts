@@ -3,6 +3,7 @@
 // daily/weekly/monthly issues or make a failed catch-up look successful. All use a local model stub.
 import { gate, stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
+import { config } from "@aihot/backend/config";
 import { after, before, beforeEach, test } from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
 import { closeDb, sql } from "@aihot/backend/db";
@@ -17,14 +18,22 @@ const provider = await stub(async (_hit, request) => ({
 }));
 process.env.DEEPSEEK_BASE_URL = `${provider.url}/v1`;
 process.env.DEEPSEEK_API_KEY = "test-key";
+// Only the localhost model fixture may make calls; restore the test safety valve afterwards.
+const originalModelCallsEnabled = config.modelCallsEnabled;
 before(async () => {
+  config.modelCallsEnabled = true;
   await sql`INSERT INTO sources (id, name, kind, tier) VALUES (${SOURCE}, 'Report recovery', 'rss', 'T1')`;
 });
 beforeEach(async () => {
   await sql`DELETE FROM reports`;
   await sql`DELETE FROM articles WHERE source_id = ${SOURCE}`;
 });
-after(async () => { await provider.close(); await stopBoss(); await closeDb(); });
+after(async () => {
+  config.modelCallsEnabled = originalModelCallsEnabled;
+  await provider.close();
+  await stopBoss();
+  await closeDb();
+});
 
 async function item(at: string) {
   const id = `recovery-${tag()}`;

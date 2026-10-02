@@ -1,6 +1,7 @@
 // Recovery must finish the same evaluation that failed, and commit the release, queue and audit together.
 import { gate, Reply, stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
+import { config } from "@aihot/backend/config";
 import { setTimeout as delay } from "node:timers/promises";
 import { after, afterEach, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
@@ -25,7 +26,7 @@ const provider = await stub(async (_hit, request) => {
     return new Reply(400, { error: "old revision refused" });
   }
   const system = String(body.messages[0]?.content ?? "");
-  const step = system.includes("宽召回的AI相关性预筛") ? "prefilter"
+  const step = system.includes("宽召回的科技产业相关性预筛") ? "prefilter"
     : system.includes("事件注意力评分器") ? "score"
     : system.includes("资料结构化助手") ? "structure" : "understand";
   calls.push(step);
@@ -35,8 +36,8 @@ const provider = await stub(async (_hit, request) => {
   }
   const content = step === "prefilter" ? { label: original ? "BLOCK" : "PASS", reason: "local fixture" }
     : step === "score" ? { attentionScore: 80 }
-    : step === "structure" ? { category: "ai-models", tags: [], subjects: [], fact: null }
-    : { itemType: "model_release", authorRole: "principal", tags: ["模型发布"], editorialJudgment: "模型能力提升", titleZh: `新判断 ${T}`, summaryZh: "模型发布并提供评测和价格。" };
+    : step === "structure" ? { category: "ai-compute", tags: [], subjects: [], fact: null }
+    : { itemType: "model_release", authorRole: "principal", tags: ["技术/产品"], editorialJudgment: "模型能力提升", titleZh: `新判断 ${T}`, summaryZh: "技术/产品并提供评测和价格。" };
   return { choices: [{ message: { content: JSON.stringify(content) } }] };
 });
 for (const name of ["DASHSCOPE_BASE_URL", "ZHIPU_BASE_URL", "DEEPSEEK_BASE_URL"]) process.env[name] = `${provider.url}/v1`;
@@ -50,7 +51,10 @@ process.env.UNDERSTAND_MODEL = "glm-5.3-flash";
 let parkedJobs: Array<{ id: string; start_after: Date }> = [];
 let parkedArticles: Array<{ id: string; processing_queued_at: Date | null }> = [];
 let savedBudgets: Array<{ service: string; per_minute: number; per_hour: number; per_day: number }> = [];
+// Only the localhost model fixture may make calls; restore the test safety valve afterwards.
+const originalModelCallsEnabled = config.modelCallsEnabled;
 before(async () => {
+  config.modelCallsEnabled = true;
   await getBoss();
   parkedJobs = await sql`SELECT id, start_after FROM pgboss.job WHERE state IN ('created', 'retry')`;
   if (parkedJobs.length) await sql`UPDATE pgboss.job SET start_after='2100-01-01' WHERE id = ANY(${parkedJobs.map((j) => j.id)}::uuid[])`;
@@ -63,6 +67,7 @@ before(async () => {
     VALUES (${SOURCE},'Recovery','rss','T1','editorial','2100-01-01')`;
 });
 after(async () => {
+  config.modelCallsEnabled = originalModelCallsEnabled;
   await stopBoss();
   await provider.close();
   if (parkedJobs.length) await sql`UPDATE pgboss.job j SET start_after = old.start_after

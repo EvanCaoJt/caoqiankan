@@ -4,6 +4,7 @@
 // close to it, or when the post it quotes arrives and joins a fact.
 import { stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
+import { config } from "@aihot/backend/config";
 import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
@@ -46,18 +47,22 @@ async function report(suffix: string, opts: { title: string; backfill?: string; 
     publishedAt: opts.publishedAt ?? new Date(), backfill: opts.backfill ?? null,
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, score, selected, output)
-            VALUES (${articleId}, 1, 'rule', 'pass', 'ai-models', ${opts.title}, '摘要', 80, false, ${sql.json({ fact: { title: opts.title } })})`;
+            VALUES (${articleId}, 1, 'rule', 'pass', 'ai-compute', ${opts.title}, '摘要', 80, false, ${sql.json({ fact: { title: opts.title } })})`;
   await publishArticle(articleId);
   return articleId;
 }
 
+// Only the localhost model fixture may make calls; restore the test safety valve afterwards.
+const originalModelCallsEnabled = config.modelCallsEnabled;
 before(async () => {
+  config.modelCallsEnabled = true;
   await sql`UPDATE budgets SET per_minute = 1000, per_hour = 10000, per_day = 100000 WHERE service IN ('dashscope', 'deepseek')`;
   await sql`INSERT INTO sources (id, name, kind, tier, participation_mode, next_fetch_at) VALUES
             (${EDITORIAL}, 'Test editorial', 'rss', 'T1', 'editorial', '2100-01-01'),
             (${SIGNAL}, 'Test signal', 'rss', 'T2', 'hot_signal', '2100-01-01')`;
 });
 after(async () => {
+  config.modelCallsEnabled = originalModelCallsEnabled;
   await provider.close();
   await stopBoss();
   await closeDb();
@@ -117,7 +122,7 @@ test("a discussion post that quotes a post not yet collected joins its story whe
     via: "fetch", publishedAt: new Date(), xPost: { tweetId, authorName: "Anthropic", handle: "AnthropicAI", text: `Introducing ${TOPIC} Sonnet` },
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, score, selected, output)
-            VALUES (${originalId}, 1, 'rule', 'pass', 'ai-models', ${`Anthropic 发布 ${TOPIC} Sonnet`}, '摘要', 80, false, ${sql.json({ fact: { title: "Sonnet" } })})`;
+            VALUES (${originalId}, 1, 'rule', 'pass', 'ai-compute', ${`Anthropic 发布 ${TOPIC} Sonnet`}, '摘要', 80, false, ${sql.json({ fact: { title: "Sonnet" } })})`;
   const joined = await groupArticle(originalId);
   assert.equal(joined.verdict, "same-fact");
   assert.equal(joined.storyId, first.storyId);

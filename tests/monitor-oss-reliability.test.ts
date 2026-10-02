@@ -43,7 +43,17 @@ beforeEach(async () => {
   await sql`DELETE FROM receipts WHERE purpose LIKE 'monitor.%'`;
   await sql`UPDATE budgets SET per_minute = 1000, per_hour = 10000, per_day = 100000 WHERE service IN ('socialdata', 'deepseek')`;
 });
-after(async () => { await provider.close(); await model.close(); await stopBoss(); await closeDb(); });
+// Only the localhost model fixture may make calls; restore the test safety valve afterwards.
+const originalModelCallsEnabled = config.modelCallsEnabled;
+config.modelCallsEnabled = true;
+
+after(async () => {
+  config.modelCallsEnabled = originalModelCallsEnabled;
+  await provider.close();
+  await model.close();
+  await stopBoss();
+  await closeDb();
+});
 
 let sequence = 0;
 async function post(text: string, at = new Date()) {

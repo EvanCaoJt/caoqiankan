@@ -1,0 +1,536 @@
+{
+  "$comment": "X 账号信源（需要 SOCIALDATA_API_KEY）。配好 key 后再并入 sources.json，或在后台逐个新建。handle 按公开资料整理，创建前请逐个预览确认。",
+  "sources": [
+    {
+      "id": "x-spacex",
+      "name": "X · SpaceX",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SpaceX -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "spacex",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "航天"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-starlink",
+      "name": "X · Starlink",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Starlink -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "spacex",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "航天"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-nvidia",
+      "name": "X · NVIDIA",
+      "kind": "x_search",
+      "config": {
+        "query": "from:nvidia -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "nvidia",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-nvidianewsroom",
+      "name": "X · NVIDIA Newsroom",
+      "kind": "x_search",
+      "config": {
+        "query": "from:nvidianewsroom -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "nvidia",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-amd",
+      "name": "X · AMD",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AMD -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "amd",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-broadcom",
+      "name": "X · Broadcom",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Broadcom -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "broadcom",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-intel",
+      "name": "X · Intel",
+      "kind": "x_search",
+      "config": {
+        "query": "from:intel -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "intel",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-microntech",
+      "name": "X · Micron",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MicronTech -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "micron",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-skhynix",
+      "name": "X · SK hynix",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SKhynix -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "skhynix",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-gevernova",
+      "name": "X · GE Vernova",
+      "kind": "x_search",
+      "config": {
+        "query": "from:GEVernova -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "ge-vernova",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "电力"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-vertiv",
+      "name": "X · Vertiv",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Vertiv -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "vertiv",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "数据中心"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-tesla_optimus",
+      "name": "X · Tesla Optimus",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Tesla_Optimus -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "tesla",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "机器人"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-googlequantumai",
+      "name": "X · Google Quantum AI",
+      "kind": "x_search",
+      "config": {
+        "query": "from:GoogleQuantumAI -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "google",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "量子"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ibmresearch",
+      "name": "X · IBM Research",
+      "kind": "x_search",
+      "config": {
+        "query": "from:IBMResearch -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "ibm",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "量子"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ionq_inc",
+      "name": "X · IonQ",
+      "kind": "x_search",
+      "config": {
+        "query": "from:IonQ_Inc -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "ionq",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "量子"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-dwavequantum",
+      "name": "X · D-Wave",
+      "kind": "x_search",
+      "config": {
+        "query": "from:dwavequantum -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "d-wave",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "量子"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-rigetti",
+      "name": "X · Rigetti",
+      "kind": "x_search",
+      "config": {
+        "query": "from:rigetti -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": true,
+      "owner_entity_id": "rigetti",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "量子"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-dylan522p",
+      "name": "X · Dylan Patel（SemiAnalysis）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:dylan522p -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "个人",
+        "半导体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-semianalysis_",
+      "name": "X · SemiAnalysis",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SemiAnalysis_ -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "研究",
+        "半导体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-fabknowledge",
+      "name": "X · Doug O'Laughlin",
+      "kind": "x_search",
+      "config": {
+        "query": "from:fabknowledge -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "个人",
+        "半导体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-dnystedt",
+      "name": "X · Dan Nystedt",
+      "kind": "x_search",
+      "config": {
+        "query": "from:dnystedt -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "个人",
+        "台湾供应链"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-iancutress",
+      "name": "X · Ian Cutress",
+      "kind": "x_search",
+      "config": {
+        "query": "from:IanCutress -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "个人",
+        "半导体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-benbajarin",
+      "name": "X · Ben Bajarin",
+      "kind": "x_search",
+      "config": {
+        "query": "from:BenBajarin -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "个人",
+        "半导体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-sciguyspace",
+      "name": "X · Eric Berger",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SciGuySpace -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "个人",
+        "航天"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-nasaspaceflight",
+      "name": "X · NASASpaceflight",
+      "kind": "x_search",
+      "config": {
+        "query": "from:NASASpaceflight -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "航天"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-elonmusk",
+      "name": "X · Elon Musk",
+      "kind": "x_search",
+      "config": {
+        "query": "from:elonmusk -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T1_5",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "hot_signal",
+      "interval_minutes": 60,
+      "tags": [
+        "热度"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-sawyermerritt",
+      "name": "X · Sawyer Merritt",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SawyerMerritt -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "first_party": false,
+      "owner_entity_id": null,
+      "participation_mode": "hot_signal",
+      "interval_minutes": 60,
+      "tags": [
+        "热度"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    }
+  ]
+}

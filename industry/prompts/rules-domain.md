@@ -1,45 +1,23 @@
+【科技产业翻译规则 — AI 算力、光互连、电力、航天、机器人与量子】
 
-【AI 领域翻译规则 — 本平台 100% 是 AI/ML/LLM 行业内容，严格遵守】
+1. 按上下文消除歧义，不把所有词强制解释成 AI：
+   - Transformer 在电网、电力设备语境译作“变压器”，在机器学习语境保留 Transformer 架构。
+   - Token 在模型计费语境保留 token；不可把金融语境中的代币误写成模型 token。
+   - Inference 在模型运行语境译作“推理”，Reasoning 可按语境译作“推理能力”；Agent 在 AI 系统语境译作“智能体”。
+   - Fab 译作晶圆厂；foundry 译作晶圆代工；packaging 在半导体语境译作封装；yield 按语境区分良率与收益率。
+   - Guidance 在财报语境译作业绩指引；backlog 译作在手订单；订单意向、客户认证和正式合同不能混用。
+   - Launch 在航天语境区分发射与产品发布；logical qubit 译作逻辑量子比特，physical qubit 译作物理量子比特，不能混同。
 
-1. 歧义默认值：以下词在中文有非 AI 歧义，**一律按 AI 含义翻译**：
-   - LLM = 大语言模型（绝不译"法学硕士"/"Master of Laws"）
-   - Token / tokens = 模型 token（保留英文；绝不译"代币"/"令牌"）
-   - Transformer = Transformer 架构（保留英文；不译"变压器"）
-   - Diffusion = 扩散模型（AI 生成，不是物理扩散）
-   - Agent / Agentic = AI 智能体 / 智能体的（不译"代理人"/"中介"）
-   - Alignment = 对齐（AI 安全语境）
-   - Inference = 推理（模型生成）
-   - Reasoning = 推理（注意：与 inference 都译"推理"，必要时用"链式推理"区分 CoT；reasoning model 指 o1/o3/R1 这类思考型模型）
-   - Embedding = 嵌入向量（也可保留英文）
-   - Distillation = 知识蒸馏
-   - Hallucination = 模型幻觉
-   - Fine-tune / Fine-tuning = 微调
-   - Pretrain / Pretraining = 预训练
-   - Context window = 上下文窗口
-   - Prompt = 提示词
-   - Skill / Skills = 技能（Claude 等 Agent 框架的能力包，不译"特长"）
+2. 专名与技术缩写：
+   - HBM、CoWoS、EMIB、Chiplet、CPO、ASIC、GPU、ABF、InP、CapEx、ASP、SMR 保留英文。标题保持简洁；摘要或解释性文字首次出现时，可用简短中文释义说明术语，不能补造事件事实。
+   - 释义：HBM 为高带宽存储器，CoWoS 与 EMIB 为先进封装技术，Chiplet 为芯粒，CPO 为共封装光学，ASIC 为专用集成电路，GPU 为图形处理器，ABF 为封装基板用积层绝缘薄膜，InP 为磷化铟，CapEx 为资本开支，ASP 为平均销售价格，SMR 为小型模块化反应堆。
+   - NVIDIA、TSMC、Broadcom、AMD、SK hynix、Micron、SpaceX、Tesla、IBM、Google、IonQ 等保留品牌原名；型号与项目名如 Blackwell、NVLink、Starship、Starlink、Optimus 原样保留。
+   - 版本号与技术参数一字不改，不把 1.6T、GB200 或 HBM3E 扩写成另一型号。
+   - 技术和接口缩写如 CUDA、ROCm、TPU、API、SDK 保留英文，含义根据语境判断。
 
-2. 以下专有名词**一律保留英文原文**，不翻译不加中文括注：
-   - AI 公司：OpenAI / Anthropic / Google DeepMind / xAI / Meta AI / Mistral / DeepSeek / Cohere / HuggingFace（HF）/ Runway / ElevenLabs / Suno / Pika / Midjourney / Perplexity
-   - 模型族（举例 + 通用规则）：GPT / Claude / Gemini / Llama / Qwen / Grok / o 系列 / DeepSeek / Mistral / Mixtral / Phi / Sora / Veo / Imagen
-     **规则**：任何大模型族名、产品代号一律保留英文
-   - 模型版本号（举例 + 通用规则）：GPT-5 / Claude 4.7 / Claude Sonnet 4.6 / Llama 4 / Gemini 3 / o3 / o4 / DeepSeek-V4 / Qwen3.7
-     **规则**：版本号一字不改（包括字母数字后缀如 4o / 4.7 / 405B / V4 / R1），绝不"翻译性扩写"（不要把 "405B" 译成 "4050 亿"，不要把 "V4" 译成 "第 4 代"）
-   - 技术缩写（举例 + 通用规则）：LLM / RAG / RLHF / DPO / LoRA / QLoRA / PEFT / MoE / CoT / ReAct / KV cache / SOTA / AGI / MCP / ADK / NPU / GPU / TPU
-     **规则**：任何 2-5 字母的全大写缩写，默认按 AI/ML 含义保留英文
-   - 评测基准（举例 + 通用规则）：MMLU / GPQA / HumanEval / SWE-bench / SWE-bench Verified / AIME / HLE / ARC-AGI / ARC-AGI 2 / MT-Bench / Chatbot Arena / Aider Polyglot / LiveCodeBench
-     **规则**：以 -bench / -eval 结尾或全大写的评测名一律保留英文
-   - AI 工具/产品：Cursor / Copilot / Codex / Aider / Devin / Cline / Claude Code / Windsurf / Zed / v0 / Bolt / Lovable / Replit Agent
-   - Agent 框架：LangChain / LangGraph / LlamaIndex / CrewAI / AutoGen / Pydantic AI / Vercel AI SDK / DSPy
-   - 推理/部署：Ollama / vLLM / SGLang / TensorRT / Triton / CUDA / ROCm
-   - 通用技术：API / SDK / CLI / IDE / SaaS / CDN / SSO / OAuth / JWT / WebSocket / SSE / gRPC
+3. 中国厂商优先用材料明确支持的中文品牌名：中际旭创、新易盛、天孚通信、源杰科技、光迅科技、沪电股份、寒武纪、中芯国际、长电科技、天准科技。不得根据“产业链受益”猜出原文未提到的公司。
 
-3. 中国厂商**优先用官方中文品牌名**（首次出现可双标"千问（Qwen3）"，后续选一种保持一致）：
-   - 千问（Qwen）/ 文心一言 / 智谱（GLM）/ 月之暗面（Kimi）/ 深度求索（DeepSeek）/ 阶跃星辰（Step）/ 零一万物（Yi）/ 百川 / 豆包（字节）/ 混元（腾讯）/ 可灵（Kling，快手）/ 即梦（Jimeng，字节）/ MiniMax（不译）/ 美团 LongCat / 昆仑万维 Skywork / 面壁 MiniCPM / 华为昇腾 / 寒武纪
-
-4. 代码 / 命令 / URL / 数字单位 **一字不改**保留：
-   - 反引号代码 `code` 不翻译
-   - 命令如 /code-review、pip install、npm run 不译（不要译"代码审查"）
-   - URL 原样
-   - 数字+单位：8k context / 175B params / 3.5x speedup / $3 per M tokens / 99.9%
-   - 金额、参数量、比例、区间必须保留原文的阿拉伯数字和单位；不要把 $10B-$100B 改写成“数百亿至数千亿美元”等中文数量词
+4. 代码、命令、URL、数字和单位按原文保留：
+   - 代码与命令不翻译，URL 原样保留。
+   - 金额、比例、价格、产能、速率、功率和区间保留阿拉伯数字及单位，币种与财报期间必须清楚；不自行换算或把指引写成已实现收入。
+   - 全文翻译任务不新增解释或译注；术语中文释义只用于摘要、综述和解释性写作。

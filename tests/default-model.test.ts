@@ -2,6 +2,7 @@
 // step of the analysis, with no per-step configuration.
 import { stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
+import { config } from "@aihot/backend/config";
 import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
@@ -22,8 +23,8 @@ const provider = await stub((_hit, req) => {
   const content =
     system.includes("宽召回") ? { label: "PASS", reason: "测试" }
     : system.includes("事件注意力评分器") ? { attentionScore: 80 }
-    : system.includes("内容理解编辑") ? { itemType: "product_launch", authorRole: "principal", tags: ["产品更新"], editorialJudgment: "理由", titleZh: "一个模型的标题", summaryZh: "一个模型写的摘要。第二句。" }
-    : system.includes("资料结构化助手") ? { category: "ai-products", tags: ["产品更新"], subjects: [], fact: null }
+    : system.includes("内容理解编辑") ? { itemType: "product_launch", authorRole: "principal", tags: ["技术/产品"], editorialJudgment: "理由", titleZh: "一个模型的标题", summaryZh: "一个模型写的摘要。第二句。" }
+    : system.includes("资料结构化助手") ? { category: "ai-compute", tags: ["技术/产品"], subjects: [], fact: null }
     : user.includes("title_zh") ? "title_zh: 标题\nsummary_zh: 摘要。"
     : null;
   if (content === null) throw new Error("unexpected request");
@@ -31,10 +32,14 @@ const provider = await stub((_hit, req) => {
 });
 Object.assign(process.env, { LLM_BASE_URL: `${provider.url}/v1`, LLM_API_KEY: "test-key", LLM_MODEL: "one-model", MODEL_CALLS_ENABLED: "true" });
 
+// Only the localhost model fixture may make calls; restore the test safety valve afterwards.
+const originalModelCallsEnabled = config.modelCallsEnabled;
 before(async () => {
+  config.modelCallsEnabled = true;
   await sql`INSERT INTO sources (id, name, kind, tier, participation_mode, next_fetch_at) VALUES (${SOURCE}, 'Test default model', 'rss', 'T1', 'editorial', '2100-01-01')`;
 });
 after(async () => {
+  config.modelCallsEnabled = originalModelCallsEnabled;
   await provider.close();
   await stopBoss();
   await closeDb();

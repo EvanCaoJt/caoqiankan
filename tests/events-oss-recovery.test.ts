@@ -5,6 +5,7 @@
 // merge only when both models see one story in their roots.
 import { gate, stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
+import { config } from "@aihot/backend/config";
 import { randomUUID } from "node:crypto";
 import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
@@ -80,7 +81,7 @@ async function report(suffix: string, title = FACT_TITLE, summary = "摘要", pu
     sourceId: SOURCE, url: `https://example.com/events-${T}-${suffix}`, title: `Model launch ${T} ${suffix}`, bodyText: "A new model.", bodyStatus: "ok", via: "fetch", publishedAt,
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, score, selected, output)
-            VALUES (${articleId}, 1, 'rule', 'pass', 'ai-models', ${title}, ${summary}, 80, false, ${sql.json({ fact: { title, subject: "测试", action: "发布", object: "模型" } })})`;
+            VALUES (${articleId}, 1, 'rule', 'pass', 'ai-compute', ${title}, ${summary}, 80, false, ${sql.json({ fact: { title, subject: "测试", action: "发布", object: "模型" } })})`;
   await publishArticle(articleId);
   return articleId;
 }
@@ -89,7 +90,10 @@ async function setScope(articleId: string, scope: "single" | "composite", fact: 
   await sql`UPDATE analyses SET output = output || ${sql.json({ scope, ...(fact ? { fact } : {}) } as never)} WHERE article_id = ${articleId}`;
 }
 
+// Only the localhost model fixture may make calls; restore the test safety valve afterwards.
+const originalModelCallsEnabled = config.modelCallsEnabled;
 before(async () => {
+  config.modelCallsEnabled = true;
   await sql`INSERT INTO sources (id, name, kind, tier, participation_mode, next_fetch_at) VALUES (${SOURCE}, 'Test events', 'rss', 'T1', 'editorial', '2100-01-01')`;
   // An existing fact with one report: the candidate every later report meets.
   const [story] = await sql<{ id: number }[]>`INSERT INTO stories (public_id, title, first_report_at, latest_at) VALUES (${randomUUID()}, ${FACT_TITLE}, now(), now()) RETURNING id`;
@@ -102,6 +106,7 @@ before(async () => {
             VALUES (${storyId}, ${first}, ${`source:${SOURCE}`}, ${SOURCE}, 'editorial', now())`;
 });
 after(async () => {
+  config.modelCallsEnabled = originalModelCallsEnabled;
   await provider.close();
   await stopBoss();
   await closeDb();

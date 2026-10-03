@@ -95,6 +95,9 @@ export function isTeaser(text: string): boolean {
  * a teaser that stands in as the excerpt when the entry has none).
  */
 function feedText(bodyHtml: string | null, summaryHtml: string, source: SourceRow): Pick<Candidate, "excerpt" | "bodyHtml" | "bodyText" | "bodyStatus"> {
+  if (source.config.adapter === "sec_edgar") {
+    return { excerpt: collapseWhitespace(stripTags(summaryHtml)).slice(0, 2000) || null, bodyHtml: null, bodyText: null, bodyStatus: "pending" };
+  }
   const bodyText = bodyHtml ? stripTags(bodyHtml) : null;
   const teaser = !!bodyText && source.participation_mode === "editorial" && isTeaser(bodyText);
   const excerpt = summaryHtml ? collapseWhitespace(stripTags(summaryHtml)).slice(0, 2000) : teaser ? collapseWhitespace(bodyText!) : null;
@@ -149,7 +152,10 @@ export async function fetchRss(source: SourceRow, opts: { force?: boolean } = {}
   if (res.status === 304 && previous && (previous.etag || previous.lastModified) && res.url === previous.responseUrl) {
     return { candidates: [], validator, notModified: true };
   }
-  if (res.status !== 200) throw new FetchError(`HTTP ${res.status}`, res.status);
+  if (res.status !== 200) {
+    const challenge = res.status === 403 && /cf-chl-|cdn-cgi\/challenge|Just a moment/i.test(res.text());
+    throw new FetchError(`HTTP ${res.status}${challenge ? " — Cloudflare 验证页，当前出口无法直接读取订阅；需更换可用网络出口或联系信源开放抓取" : ""}`, res.status);
+  }
   let doc: Record<string, any>;
   try {
     doc = parser.parse(res.text());

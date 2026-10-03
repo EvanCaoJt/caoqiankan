@@ -5,6 +5,8 @@ import { IDENTITY_CONTEXT_ALIASES, IDENTITY_LEXICON, PUBLISHER_DOMAINS } from "@
 import { onlyXArticleLink } from "../sources/x.ts";
 import type { AnalyzeInputArticle } from "./input.ts";
 import { promptText } from "./prompts.ts";
+import { isSecFilingIndex } from "../content/sec-edgar.ts";
+import { correctUsdScale } from "./money.ts";
 
 export const PREFILTER_SYSTEM = promptText("prefilter");
 export const UNDERSTAND_SYSTEM = promptText("understand");
@@ -76,6 +78,7 @@ export function needsShortTweetTranslation(text: string): boolean {
 const unfetchedXArticle = (a: AnalyzeInputArticle) => !!a.xPost && a.bodyStatus !== "ok" && onlyXArticleLink(String(a.xPost.text ?? ""));
 
 function materialQuality(a: AnalyzeInputArticle): string {
+  if (isSecFilingIndex(a.url) && a.bodyStatus !== "ok") return "正式披露正文及业绩附件未抓取，仅有目录或 feed 元数据，不能据此断言公告未披露数据";
   if (a.xPost) return "完整正文（来自 RSS / API 自带的 content 字段）";
   if (a.bodyText) return a.source.fetchesBody ? "完整正文（抓自原始网页）" : "完整正文（来自 RSS / API 自带的 content 字段）";
   if (a.excerpt) return "仅摘要（feed 未提供完整正文）";
@@ -266,9 +269,10 @@ export const isShortTweetInput = (input: TranslateInput) => input.sourceKind ===
 
 /** The length rule (compacted without another call) and the identity guard, for any writing model. */
 export function finalizeCopy(input: TranslateInput, copy: { titleZh: string; summaryZh: string }) {
-  let summaryZh = copy.summaryZh;
+  const source = [input.title, input.text, input.quotedText].filter(Boolean).join("\n");
+  let summaryZh = correctUsdScale(source, copy.summaryZh);
   if (!isShortTweetInput(input) && summaryZh && !answerFirstSummaryLengthOk(summaryZh, input)) summaryZh = compactAnswerFirstSummary(summaryZh);
-  return enforceIdentity(input, { titleZh: copy.titleZh, summaryZh });
+  return enforceIdentity(input, { titleZh: correctUsdScale(source, copy.titleZh), summaryZh });
 }
 
 // ── Title/summary prompts for items the content understanding does not write ─────────────────

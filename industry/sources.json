@@ -569,7 +569,7 @@
       "name": "Data Center Dynamics",
       "kind": "rss",
       "config": {
-        "feedUrl": "https://www.datacenterdynamics.com/en/rss/",
+        "feedUrl": "https://www.datacenterdynamics.com/rss/",
         "_aihot": {
           "initialBackfillLimit": 8
         }

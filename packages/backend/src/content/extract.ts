@@ -12,12 +12,13 @@ import { onlyXArticleLink, xArticleText } from "../sources/x.ts";
 import { sanitizeBody, trimTrailingChrome } from "./sanitize.ts";
 import { contentHash } from "./materials.ts";
 import { markdownBody } from "./markdown.ts";
+import { extractSecFiling, isSecFilingIndex } from "./sec-edgar.ts";
 
 export interface ExtractedBody {
   html: string;
   text: string;
   images: Array<{ kind: "image"; url: string; width: number | null; height: number | null }>;
-  via: "readability" | "jina";
+  via: "readability" | "jina" | "sec_edgar";
 }
 
 const MIN_BODY_CHARS = 200;
@@ -47,6 +48,7 @@ export function readable(html: string, url: string): ExtractedBody | null {
 }
 
 export async function extractFromUrl(url: string, opts: { allowJina: boolean; subject: string }): Promise<ExtractedBody | null> {
+  if (isSecFilingIndex(url)) return extractSecFiling(url);
   try {
     const res = await guardedFetch(url, { timeoutMs: 20_000, maxBytes: 6 * 1024 * 1024 });
     const type = res.headers.get("content-type") ?? "";

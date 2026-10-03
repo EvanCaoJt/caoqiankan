@@ -211,7 +211,7 @@ function ApiTab({ base }: { base: string }) {
         <Bullets items={[
           "不传 mode 等同 selected（精选）；只有明确需要全部公开动态才用 all。",
           "完整精选不限 7 天：snapshot 首次拿全，changes 只取变化；items 只看最近 7 天。",
-          "items 不带正文：返回摘要、推荐理由、站内阅读页与原文链接。",
+          "items 不带正文：返回摘要、关注理由、站内阅读页与原文链接。",
           "没有推送通道：按响应的 s-maxage 带 If-None-Match 轮询，没变化时是 304。",
           "错误是 Problem JSON；反馈时附上 requestId 即可定位。",
         ]} />

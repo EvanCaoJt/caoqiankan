@@ -41,7 +41,7 @@ function itemLines(items: V1ItemPayload[]): string[] {
     `${i + 1}. [${linkText(it.title)}](${it.links.aihot})`,
     `   ${[it.source.name, it.publishedAt ? `发布于 ${stamp(it.publishedAt)}` : `${SITE.name} 收录于 ${stamp(it.discoveredAt)}`, category(it.category)].filter(Boolean).join(" · ")}`,
     ...(it.summary ? [`   摘要：${it.summary}`] : []),
-    ...(it.reason ? [`   推荐理由：${it.reason}`] : []),
+    ...(it.reason ? [`   关注理由：${it.reason}`] : []),
     `   原文：${it.links.original}`,
     "",
   ]);
@@ -49,7 +49,7 @@ function itemLines(items: V1ItemPayload[]): string[] {
 
 const BRIEF_HINTS = [
   "先用一两句话概括，再挑最重要的 3–8 条（用户要全部就全列）；保持上面的先后顺序，不要自己排成榜单。",
-  `每条：标题链接到 ${SITE.name}；写来源和北京时间；用一两句人话讲清楚是什么。有推荐理由就用它说明为什么值得关注，没有就不要编。`,
+  `每条：标题链接到 ${SITE.name}；写来源和北京时间；用一两句人话讲清楚是什么。有关注理由就用它说明为什么值得关注、对产业链意味着什么，没有就不要编；不要写买入、卖出、评级、目标价或涨跌预测。`,
   "只根据上面的内容回答，不要用训练记忆补成“最新消息”；用户要出处时再给原文链接。",
   NO_INTERNALS,
 ];

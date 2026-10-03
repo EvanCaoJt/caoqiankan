@@ -165,7 +165,7 @@ export async function exportMarkdown(id: string): Promise<{ filename: string; bo
   lines.push(`- ${SITE.name}：${itemUrl(row.id)}`);
   lines.push(`- 原文：${row.url}`, "");
   if (row.summary) lines.push("## 摘要", "", row.summary, "");
-  if (row.selected && row.reason) lines.push("## 推荐理由", "", row.reason, "");
+  if (row.selected && row.reason) lines.push("## 关注理由", "", row.reason, "");
   if (row.channel === "x" && row.body_mode === "full" && row.x_post?.text) {
     lines.push("## 正文", "", String(row.x_post.text), "");
     if (row.zh_text) lines.push("## 中文译文", "", row.zh_text, "");

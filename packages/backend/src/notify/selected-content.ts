@@ -27,7 +27,7 @@ interface Row {
 
 function card(r: Row) {
   const category = r.category ? CATEGORY_LABELS[r.category] : null;
-  const lines = [r.summary, r.reason ? `**推荐理由**：${r.reason}` : null, `来源：${r.source_name}`].filter(Boolean);
+  const lines = [r.summary, r.reason ? `**关注理由**：${r.reason}` : null, `来源：${r.source_name}`].filter(Boolean);
   return {
     header: { title: { tag: "plain_text", content: r.title }, template: "turquoise" },
     elements: [

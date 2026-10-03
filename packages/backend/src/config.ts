@@ -32,6 +32,14 @@ function bool(name: string, fallback: boolean): boolean {
   return value === "1" || value.toLowerCase() === "true";
 }
 
+function retentionDays(name: string, fallback: number): number {
+  const value = env[name];
+  if (value === undefined || value === "") return fallback;
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 1) throw new Error(`${name} must be a positive integer`);
+  return parsed;
+}
+
 
 export const config = {
   databaseUrl: str("DATABASE_URL", "postgres://127.0.0.1:5432/aihot"),
@@ -51,6 +59,8 @@ export const config = {
   /** Optional directory of per-group dotenv files (models.env, collectors.env, …); normally everything is in .env. */
   credentialsDir: env.AIHOT_CREDENTIALS_DIR || null,
   dataDir: str("AIHOT_DATA_DIR", path.join(REPO_ROOT, ".data")),
+  feedbackRetentionDays: retentionDays("FEEDBACK_RETENTION_DAYS", 180),
+  rateLimitIdRetentionDays: retentionDays("RATE_LIMIT_ID_RETENTION_DAYS", 30),
   // Name of this deployment in alerts ("production" sends them without a prefix).
   environmentName: str("AIHOT_ENVIRONMENT", isProduction ? "production" : "development"),
   // Model calls are live unless explicitly disabled (tests, replays).

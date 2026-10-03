@@ -1,5 +1,6 @@
 import { tag } from "./setup.ts";
 import assert from "node:assert/strict";
+import { SITE } from "@aihot/industry/site";
 import { randomUUID } from "node:crypto";
 import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
@@ -231,6 +232,9 @@ for (const kind of ["x_search", "rss"] as const) {
         await summaryMarkdown(f);
       }
       const fullFeed = await feedItem("/feed/full.xml", f);
+      assert.ok(fullFeed.includes(SITE.riskNotice));
+      const encoded = /<content:encoded><!\[CDATA\[([\s\S]*?)\]\]><\/content:encoded>/.exec(fullFeed);
+      if (encoded) assert.ok(encoded[1]!.includes(SITE.riskNotice));
       assert.equal(fullFeed.includes("content:encoded"), full && syndicate);
       if (full && syndicate) assert.ok(fullFeed.includes(f.zh));
       else noContent(fullFeed, f);

@@ -8,12 +8,15 @@ import { FEATURES } from '@aihot/industry/features';
 import { PUBLIC_API_CATEGORY_KEYS } from '@aihot/contracts/taxonomy';
 import { closeDb } from '@aihot/backend/db';
 import { agentGuide, dailyAnswer, latestAnswer } from '@aihot/backend/publication/agent';
+import { llmsTxt } from '@aihot/backend/publication/llms';
 import { buildApp } from '../apps/api/src/app.ts';
 const app = await buildApp();
 after(async () => { await app.close(); await closeDb(); });
 test('Agent discovery uses configured identity and current optional modules', async () => {
   const guide = agentGuide();
   assert.ok(guide.includes(SITE.name));
+  assert.ok(guide.includes(SITE.riskNotice));
+  assert.ok(llmsTxt({hasDailies:true,hasWeekly:true,hasMonthly:true,hasLeaderboard:false}).includes(SITE.riskNotice));
   assert.ok(!guide.includes('https://aihot.news'));
   for (const key of PUBLIC_API_CATEGORY_KEYS) assert.ok(guide.includes(key));
   assert.equal(guide.includes('/agent/codex-resets'), FEATURES.codexResetMonitor);
@@ -32,6 +35,8 @@ test('empty answers are explicit and fixed reports include their flash section',
   const query = {mode:'selected',window:'24h',category:null,limit:10} as const;
   const res = {schemaVersion:1,query:{...query,by:'timeline',q:null,ordering:'timelineDesc'},items:[],page:{count:0,hasMore:false,nextCursor:null}} as const;
   assert.match(latestAnswer({...res,items:[]},query),/没有符合条件/);
+  assert.ok(latestAnswer({...res,items:[]},query).includes(SITE.riskNotice));
   const text = dailyAnswer({date:'2026-09-30',windowStart:'2026-09-29T00:00:00Z',windowEnd:'2026-09-30T00:00:00Z',links:{aihot:'https://example.org/daily/2026-09-30'},lead:null,sections:[],flashes:[{title:'FLASH-MARKER',publishedAt:'2026-09-29T01:00:00Z',source:{name:'Source'},links:{aihot:'https://example.org/items/1',original:'https://source.example/1'}}]},'http');
   assert.ok(text.includes('FLASH-MARKER'));assert.match(text,/【快讯】/);assert.ok(text.includes('不可信外部资料'));
+  assert.ok(text.includes(SITE.riskNotice));
 });

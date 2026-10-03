@@ -82,13 +82,13 @@ function fullContent(r: FeedRow, aihot: string): string | null {
     html = r.language !== "zh" && r.tr_html && r.tr_complete ? r.tr_html : r.body_html;
   }
   if (!html) return null;
-  return `${proxyBodyImages(html, true, FEED_IMAGE_SECONDS)}<p>—— 本文由 ${escapeXml(SITE.name)} 聚合整理，完整版与更多动态见 <a href="${aihot}">${aihot}</a></p>`;
+  return `${proxyBodyImages(html, true, FEED_IMAGE_SECONDS)}<p>—— 本文由 ${escapeXml(SITE.name)} 聚合整理，完整版与更多动态见 <a href="${aihot}">${aihot}</a></p><p>${escapeXml(SITE.riskNotice)}</p>`;
 }
 
 function itemXml(r: FeedRow, includeContent: boolean): string {
   const aihot = itemUrl(r.id);
   const summary = r.summary ?? "";
-  const description = `<p>${escapeXml(summary)}</p>\n<p>🔗 <a href="${escapeXml(r.url)}">阅读原文</a></p>\n<p>via ${escapeXml(SITE.name)} · <a href="${aihot}">${aihot}</a></p>`;
+  const description = `<p>${escapeXml(summary)}</p>\n<p>🔗 <a href="${escapeXml(r.url)}">阅读原文</a></p>\n<p>via ${escapeXml(SITE.name)} · <a href="${aihot}">${aihot}</a></p>\n<p>${escapeXml(SITE.riskNotice)}</p>`;
   const label = r.category ? CATEGORY_LABELS[r.category as PublicApiCategoryKey] : undefined;
   const category = label ? `\n      <category>${escapeXml(label)}</category>` : "";
   let content = "";
@@ -161,7 +161,7 @@ export async function dailyFeed(): Promise<string> {
     const url = dailyUrl(r.key);
     const lead = reportHeadline(r.content, "daily", gone);
     const title = lead ? `${SITE.name} ${withSubject("日报")} · ${r.key} — ${lead}` : `${SITE.name} ${withSubject("日报")} · ${r.key}`;
-    const description = `<p>${escapeXml(r.content.lead?.leadParagraph ?? lead ?? "")} — 点击查看完整日报</p>\n<p>via ${escapeXml(SITE.name)} · <a href="${url}">${url}</a></p>`;
+    const description = `<p>${escapeXml(r.content.lead?.leadParagraph ?? lead ?? "")} — 点击查看完整日报</p>\n<p>via ${escapeXml(SITE.name)} · <a href="${url}">${url}</a></p>\n<p>${escapeXml(SITE.riskNotice)}</p>`;
     return `    <item>
       <title>${cdata(title)}</title>
       <link>${url}</link>

@@ -25,6 +25,12 @@ export async function auditHistory(subject: string, limit = 20): Promise<BeforeJ
     SELECT created_at, actor, action, reason, before, after FROM audit_log WHERE subject = ${subject} ORDER BY created_at DESC LIMIT ${limit}`;
 }
 
+/** Feedback notes and source identifiers must expire with their underlying records. */
+export async function pruneFeedbackAudit(feedbackIds: number[], identifierCutoff: Date, db: Db = sql) {
+  for (const id of feedbackIds) await db`DELETE FROM audit_log WHERE subject = ${`feedback:${id}`}`;
+  await db`DELETE FROM audit_log WHERE subject LIKE 'feedback-source:%' AND created_at < ${identifierCutoff}`;
+}
+
 /** The admin's audit page: every change, or those of one subject or action prefix, 100 a page. */
 export async function listAudit(f: { subject?: string; action?: string; page: number }): Promise<BeforeJson<AdminAudit>> {
   const rows = await sql<BeforeJson<AdminAudit["rows"][number]>[]>`

@@ -18,6 +18,9 @@ export const SITE = {
   mcpPrefix: "caoqiankan",
   contactEmail: "caojiantaocn@163.com" as string | null,
   footerNote: "内容仅供研究参考，不构成投资建议 · 由 AIHOT 开源框架驱动",
+  aiNotice: "AI 生成摘要 · 以原文为准",
+  riskNotice: "内容由 AI 根据公开资料生成，仅供研究参考，不构成投资建议；请以原文为准。市场有风险，投资需谨慎。",
+  reportRiskNotice: "本报告由 AI 根据公开资料生成，仅供研究参考，不构成投资建议。市场有风险，投资需谨慎。",
   icp: null as string | null,
   organization: {
     name: "曹前看投研",

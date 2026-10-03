@@ -207,6 +207,7 @@ export default function StoryPage() {
           <Badge tone={status.tone}>{status.label}</Badge>
         </div>
         <h1 className="mt-2.5 text-[27px] font-bold leading-[1.5] tracking-[-0.01em] text-ink lg:mt-3 lg:text-[36px] lg:font-[730]">{story.title}</h1>
+        <p className="mt-2 text-[12px] leading-relaxed text-ink-4">{SITE.aiNotice}</p>
         <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12.5px] text-ink-3">
           <span className="inline-flex items-center gap-1.5">
             <IconDoc size={15} className="text-ink-4" />
@@ -247,6 +248,7 @@ export default function StoryPage() {
             {overview ? (
               <>
                 <p className="whitespace-pre-line text-[15px] leading-[1.85] text-ink-2">{overview.text}</p>
+                <p className="mt-2 text-[12px] leading-relaxed text-ink-4">{SITE.aiNotice}</p>
                 {overview.note && (
                   <p className="mt-2 text-[12px] text-ink-4" suppressHydrationWarning>
                     {overview.note}

@@ -1,6 +1,7 @@
 // One report in a feed. Desktop (≥ 961px): a white card beside the time rail. Mobile: a compact row
 // with a divider, the reason in a grey box. One markup, two presentations, as on the original site.
 import { memo } from "react";
+import { SITE } from "@aihot/industry/site";
 import { Link } from "react-router";
 import { IntentLink } from "../../components/ui/IntentLink";
 import type { GroupInfo, FeedItemSummary, TimelineFilters } from "@aihot/contracts/site";
@@ -67,6 +68,7 @@ export const FeedItem = memo(function FeedItem({ item, group, filters, read = fa
         </>
       )}
 
+      {item.selected && <p className="mt-1.5 text-[12px] leading-relaxed text-ink-4">{SITE.aiNotice}</p>}
       {isX && item.x!.media.length > 0 && <MediaThumbs media={item.x!.media} className="mt-2.5" />}
       {isX && item.x!.quoted?.text && <QuotedLine quoted={item.x!.quoted} />}
 

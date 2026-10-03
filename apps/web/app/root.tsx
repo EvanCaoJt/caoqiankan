@@ -52,6 +52,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <footer className="px-4 pb-[calc(88px+env(safe-area-inset-bottom))] pt-4 text-center text-[12px] leading-relaxed text-ink-4 lg:pb-8">
+          {SITE.footerNote}
+        </footer>
         <ScrollRestoration getKey={(location) => location.key} />
         <Scripts />
       </body>

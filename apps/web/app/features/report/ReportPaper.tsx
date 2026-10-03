@@ -231,6 +231,7 @@ function FrontPage({ report, pages, leadStory, count }: { report: ReportDetail; 
             title
           )}
         </h2>
+        <p className="mt-2 text-[12px] leading-relaxed text-ink-4">{SITE.aiNotice}</p>
         {dek && (
           <div className={cover && !wide ? "mt-6 grid gap-6 @[640px]:grid-cols-[minmax(0,1fr)_minmax(0,38%)] @[880px]:mt-7" : ""}>
             <p className={`text-[16.5px] leading-[1.9] text-ink-2 @[880px]:text-[17.5px] ${cover && !wide ? "" : "mt-6 @[560px]:text-justify @[880px]:mt-7"}`}>{dek}</p>
@@ -405,6 +406,7 @@ export function ReportPaper({ report, index }: { report: ReportDetail; index: Re
         </SectionPage>
       )}
 
+      <p className="mt-10 text-[12px] leading-relaxed text-ink-4">{SITE.reportRiskNotice}</p>
       <Neighbours report={report} index={index} />
       {!daily && <History report={report} index={index} />}
       <footer className="py-10 text-center">

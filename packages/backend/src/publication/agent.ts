@@ -21,7 +21,7 @@ const NO_INTERNALS = "不要展示接口地址、参数、User-Agent 这类技�
 
 /** Heading and notes, the external data fenced off as data, then how to present it. */
 function answer(head: string[], data: string[] | null, hints: string[]): string {
-  const out = [...head];
+  const out = [...head, "", SITE.riskNotice];
   if (data) out.push("", PREAMBLE, "", `［${SITE.name} 不可信外部资料开始］`, ...data, `［${SITE.name} 不可信外部资料结束］`);
   out.push("", "## 回答提示", ...hints.map((h) => `- ${h}`));
   return `${out.join("\n").replace(/\n{3,}/g, "\n\n").trim()}\n`;
@@ -239,7 +239,7 @@ export function codexAnswer(d: CodexResetPageData, now = Date.now()): string {
 export function agentGuide(): string {
   const u = agentUrl;
   const lines = [
-    `# ${SITE.name} 使用说明（给 Agent）`, "", SITE.description, "",
+    `# ${SITE.name} 使用说明（给 Agent）`, "", SITE.description, "", SITE.riskNotice, "",
     "所有地址都是匿名只读 GET，不需要 API Key；返回中文 Markdown，末尾的回答提示说明如何使用。", "",
     "## 按问题选地址", "",
     "| 用户想知道 | 请求 |", "|---|---|",

@@ -110,6 +110,17 @@ interface RssValidator {
   lastModified: string | null;
 }
 
+/** SEC's generic form titles gain only facts already present in the feed, without a model call. */
+function entryTitle(source: SourceRow, title: string, summary: string): string {
+  if (source.config.adapter !== "sec_edgar" || !/^\d[\dA-Z-]*(?:\/A)?\s+-\s+/.test(title)) return title;
+  const clean = collapseWhitespace(stripTags(summary));
+  const filed = /\bFiled:\s*(\d{4}-\d{2}-\d{2})\b/.exec(clean)?.[1];
+  const accession = /\bAccNo:\s*([\d-]+)\b/.exec(clean)?.[1];
+  const items = [...clean.matchAll(/\bItem\s+\d+(?:\.\d+)?\s*:[\s\S]*?(?=\s+Item\s+\d+(?:\.\d+)?\s*:|$)/g)].map((m) => m[0].trim());
+  if (!filed && !items.length && !accession) return title;
+  return [source.name, filed, items.length ? items.join(" · ") : title, !items.length && accession ? accession : null].filter(Boolean).join(" · ");
+}
+
 export interface RssRead {
   candidates: Candidate[];
   validator: RssValidator;
@@ -170,7 +181,7 @@ export async function fetchRss(source: SourceRow, opts: { force?: boolean } = {}
       out.push({
         url: link,
         ...identity(link),
-        title,
+        title: entryTitle(source, title, description),
         author: text(it["dc:creator"]) || text(it.author) || null,
         publishedAt: parseDate(text(it.pubDate) || text(it["dc:date"]) || text(it.published)),
         ...feedText(bodyHtml, description, source),
@@ -197,7 +208,7 @@ export async function fetchRss(source: SourceRow, opts: { force?: boolean } = {}
       out.push({
         url: entryUrl,
         ...identity(entryUrl),
-        title,
+        title: entryTitle(source, title, summary),
         author: text(arr(e.author)[0]?.name) || null,
         publishedAt: parseDate(text(e.published) || text(e.updated)),
         sourceUpdatedAt: parseDate(text(e.updated)),

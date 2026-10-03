@@ -33,6 +33,8 @@
 
 可选：`summaryIsBody`（订阅里的摘要就是全文）、`allowCategories` / `denyCategories`（按订阅里的分类过滤）。
 
+SEC EDGAR 的公司公告订阅可设置 `adapter: "sec_edgar"`。标题会使用信源名称、Filed 日期和订阅原有的 Item 事项；没有 Item 的 6-K 等文件保留表格名称并附公告编号。不会调用模型、猜测公告内容或改变公告链接，也不代表已经提取公告正文。
+
 ### web_list
 
 支持普通 CSS 选择器，`div` 列表也能采集。关键是 `itemSelector` 要选中**每条新闻**，而不是包住所有新闻的容器。例如：

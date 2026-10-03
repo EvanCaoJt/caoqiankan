@@ -7,7 +7,7 @@ import type { SourceRow } from "./types.ts";
 const COLLECTED = ["_aihot", "allowUrlPrefixes", "denyUrlPrefixes", "ingestNoiseFilter", "itemUrlPrefixRewrite", "sortByPublishedAt", "detail", "fetchPublicContent"];
 
 const KEYS: Record<SourceRow["kind"], string[]> = {
-  rss: [...COLLECTED, "feedUrl", "summaryIsBody", "preserveUrlFragment", "allowCategories", "denyCategories"],
+  rss: [...COLLECTED, "feedUrl", "adapter", "summaryIsBody", "preserveUrlFragment", "allowCategories", "denyCategories"],
   web_list: [
     ...COLLECTED, "url", "baseUrl", "parseMode", "adapter", "cacheToleranceSeconds", "linksStartLine", "preserveUrlFragment",
     "itemSelector", "linkSelector", "titleSelector", "publishedAtSelector", "publishedAtRegex", "publishedAtUtcOffset",
@@ -37,7 +37,8 @@ const NESTED: Record<string, string[]> = {
 };
 
 const VALUES: Record<string, string[]> = {
-  adapter: ["mimo_home"],
+  "rss.adapter": ["sec_edgar"],
+  "web_list.adapter": ["mimo_home"],
   parseMode: ["html", "markdown", "docusaurus_changelog"],
 };
 
@@ -46,8 +47,9 @@ export function unsupportedConfig(kind: SourceRow["kind"], config: Record<string
   const allowed = new Set(KEYS[kind] ?? []);
   const out: string[] = [];
   for (const [key, value] of Object.entries(config ?? {})) {
+    const values = VALUES[`${kind}.${key}`] ?? VALUES[key];
     if (!allowed.has(key)) out.push(key);
-    else if (VALUES[key] && !VALUES[key]!.includes(String(value))) out.push(`${key}=${String(value)}`);
+    else if (values && !values.includes(String(value))) out.push(`${key}=${String(value)}`);
     else if (NESTED[key] && value && typeof value === "object") {
       for (const sub of Object.keys(value)) if (!NESTED[key]!.includes(sub)) out.push(`${key}.${sub}`);
     }

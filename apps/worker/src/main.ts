@@ -16,7 +16,8 @@ assertProductionSecrets([["auth", "IMG_PROXY_SIGN_SECRET"]]);
 
 await ensureContentTargets();
 const boss = await getBoss();
-await registerContentJobs(boss);
+// Keep paid analysis queued while the operator has disabled model calls.
+if (process.env.MODEL_CALLS_ENABLED !== "false") await registerContentJobs(boss);
 if (process.env.COLLECT_ENABLED !== "false") await registerSourceJobs(boss);
 await registerEventJobs(boss);
 await registerNotifyJobs(boss);
